@@ -665,6 +665,11 @@ write.csv(evaluation_likes_and_wishes,
 #   (iv) using algorithms to identify themes and quantify subjective
 #        information.
 
+
+# TODO: Read the text for stemming and lemmatization and then you can apply
+# the logic to be able to apply this in this context 
+
+
 # Tokenization is the process of breaking out text into smaller meaningful
 # units called tokens.
 
@@ -687,7 +692,9 @@ write.csv(evaluation_likes_and_wishes,
 # analysis tasks because they are frequently used in the language and do not
 # carry significant meaning on their own.
 # Examples of stopwords in English include:
+View(stop_words) # comes automatically why you install {tidytext}
 # "the," "and," "is," "in," "it," "of," "to," "for," and "with."
+
 
 # Additional examples can be seen here:
 head(sample(stop_words$word, 20), 20)
