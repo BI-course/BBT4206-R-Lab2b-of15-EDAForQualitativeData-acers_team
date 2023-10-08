@@ -1,7 +1,7 @@
 ---
 title: "Business Intelligence Lab Submission Markdown"
-author: "<Specify your group name here>"
-date: "<Specify the date when you submitted the lab>"
+author: "Acers Team"
+date: "8th October 2023"
 output:
   github_document: 
     toc: yes
@@ -18,17 +18,17 @@ editor_options:
 +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | **Student ID Numbers and Names of Group Members** | *\<list one student name, class group (just the letter; A, B, or C), and ID per line, e.g., 123456 - A - John Leposo; you should be between 2 and 5 members per group\>* |
 |                                                   |                                                                                                                                                                          |
-|                                                   | 1.  ID - Class Group - Name                                                                                                                                              |
+|                                                   | 1.  122790 - C - Nicholas Bwalley                                                                                                                                             |
 |                                                   |                                                                                                                                                                          |
-|                                                   | 2.  ID - Class Group - Name                                                                                                                                              |
+|                                                   | 2.  133834 - C - Sarah Mongare                                                                                                                                             |
 |                                                   |                                                                                                                                                                          |
-|                                                   | 3.  ID - Class Group - Name                                                                                                                                              |
+|                                                   | 3.  134879 - C - Lesley Tulienge                                                                                                                                             |
 |                                                   |                                                                                                                                                                          |
-|                                                   | 4.  ID - Class Group - Name                                                                                                                                              |
+|                                                   | 4.  124461 - C - Angela Kinya                                                                                                                                             |
 |                                                   |                                                                                                                                                                          |
-|                                                   | 5.  ID - Class Group - Name                                                                                                                                              |
+|                                                   | 5.  133928 - C - Millicent Cheptoi                                                                                                                                             |
 +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| **GitHub Classroom Group Name**                   | *\<specify the name of the team you created on GitHub classroom\>*                                                                                                       |
+| **GitHub Classroom Group Name**                   | *\<specify the name of the team you created on GitHub classroom\>*                                                 acers_team                                                      |
 +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | **Course Code**                                   | BBT4206                                                                                                                                                                  |
 +---------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -100,7 +100,7 @@ The 20230412-20230719-BI1-BBIT4-1-StudentPerformanceDataset is then loaded. The 
 ```{r Load Dataset}
 student_performance_dataset <-
   readr::read_csv(
-                  "../data/20230412-20230719-BI1-BBIT4-1-StudentPerformanceDataset.CSV", # nolint
+                  "../data/20230412-20230719-BI1-BBIT4-1-StudentPerformanceDataset.CSV",
                   col_types =
                   readr::cols(
                               class_group =
@@ -242,34 +242,815 @@ We then display the number of observations and number of variables. We have 101 
 dim(student_performance_dataset)
 ```
 
-Next, we display the quartiles for each numeric variable[*... think of this process as **"storytelling using the data."** Tell us what is happening; tell us what you are discovering as you proceed with the markdown; walk us through your code step-by-step (a code walkthrough).*]{#highlight style="color: blue"}
+Next, we display the quartiles for each numeric variable[*... think of this process as **"storytelling using the data."*]Here, a summary of each variable in the dataset is displayed. It includes the minimum, 1st quartile, median, mean, 3rd quartile and the maximum.{#highlight style="color: blue"}
 
 ```{r Your Fifth Code Chunk}
 summary(student_performance_dataset)
 ```
 
 # \<You can Provide Another Appropriate Title Here if you wish\>
+## Data Manipulation
+The dplyr package allows to create a subset of the data and provides a set of verbs to help solve data manipulation challenges. These verbs include: mutate, filter, group_by, select,summarize and arrange.More documentation on dplyr can be found here: <https://cran.r-project.org/package=dplyr> or <https://github.com/tidyverse/dplyr>
 
-Describe the code chunk here.
+There is also the pipe operator, %>% ,that chains operations together to enhance readability and maintainability of code. The %>% operator takes the result of the expression on its left and passes it as the first argument to the function on its right. This allows you to chain together a sequence of operations on a dataset or object.
 
 ```{r Your Sixth Code Chunk}
-# Fill this with R related code that will be executed when the R markdown file
+
+evaluation_per_group_per_gender <- student_performance_dataset %>% 
+  mutate(`Student's Gender` =
+           ifelse(gender == 1, "Male", "Female")) %>%
+  select(class_group, gender,
+         `Student's Gender`, `Average Course Evaluation Rating`) %>%
+  filter(!is.na(`Average Course Evaluation Rating`)) %>%
+  group_by(class_group, `Student's Gender`) %>%
+  summarise(average_evaluation_rating =
+              mean(`Average Course Evaluation Rating`)) %>%
+  arrange(desc(average_evaluation_rating), .by_group = TRUE)
+View(evaluation_per_group_per_gender)
+
+evaluation_per_group_per_gender %>%
+  rename(`Class Group` = class_group) %>%
+  rename(`Average Course Evaluation Rating` = average_evaluation_rating) %>%
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`) %>%
+  mutate(`Average Course Evaluation Rating` =
+           color_tile("#B9BCC2", "#536CB5")
+           (`Average Course Evaluation Rating`)) %>%
+  kable("html", escape = FALSE, align = "c",
+        caption = "Course Evaluation Rating per Group and per Gender") %>%
+  kable_styling(bootstrap_options =
+                  c("striped", "condensed", "bordered"),
+                full_width = FALSE)
+evaluation_per_group_per_gender %>%
+  ggplot() +
+  geom_bar(aes(x = class_group, y = average_evaluation_rating,
+               fill = `Student's Gender`),
+           stat = "identity", position = "dodge") +
+  expand_limits(y = 0) +
+  blue_grey_theme() +
+  scale_fill_manual(values = blue_grey_colours_2) +
+  ggtitle("Course Evaluation Rating per Group and per Gender") +
+  labs(x = "Class Group", y = "Average Rating")
 ```
 
-## \<You Can Have a Sub-Title Here if you wish\>
+## Data Cleansing
 
-Describe the code chunk here.
+The cleansing for qualitative data includes: contractions,removal of special characters,putting in lower case to standardize the text, stemming-generally refers to removing suffixes from words to get the common origin,lemmatization-reducing inflected (or sometimes derived) words to their word stem, base or root form, tokenization and stopword removal.
 
 ```{r Your Seventh Code Chunk}
-# Fill this with other R related code that will be executed when the R markdown
+expand_contractions <- function(doc) {
+  doc <- gsub("I'm", "I am", doc, ignore.case = TRUE)
+  doc <- gsub("you're", "you are", doc, ignore.case = TRUE)
+  doc <- gsub("he's", "he is", doc, ignore.case = TRUE)
+  doc <- gsub("she's", "she is", doc, ignore.case = TRUE)
+  doc <- gsub("it's", "it is", doc, ignore.case = TRUE)
+  doc <- gsub("we're", "we are", doc, ignore.case = TRUE)
+  doc <- gsub("they're", "they are", doc, ignore.case = TRUE)
+  doc <- gsub("I'll", "I will", doc, ignore.case = TRUE)
+  doc <- gsub("you'll", "you will", doc, ignore.case = TRUE)
+  doc <- gsub("he'll", "he will", doc, ignore.case = TRUE)
+  doc <- gsub("she'll", "she will", doc, ignore.case = TRUE)
+  doc <- gsub("it'll", "it will", doc, ignore.case = TRUE)
+  doc <- gsub("we'll", "we will", doc, ignore.case = TRUE)
+  doc <- gsub("they'll", "they will", doc, ignore.case = TRUE)
+  doc <- gsub("won't", "will not", doc, ignore.case = TRUE)
+  doc <- gsub("can't", "cannot", doc, ignore.case = TRUE)
+  doc <- gsub("n't", " not", doc, ignore.case = TRUE)
+  return(doc)
+}
+
+evaluation_likes_and_wishes <- student_performance_dataset %>%
+  mutate(`Student's Gender` =
+           ifelse(gender == 1, "Male", "Female")) %>%
+  rename(`Class Group` = class_group) %>%
+  rename(Likes = `D - 1. \nWrite two things you like about the teaching and learning in this unit so far.`) %>% 
+  rename(Wishes = `D - 2. Write at least one recommendation to improve the teaching and learning in this unit (for the remaining weeks in the semester)`) %>% 
+  select(`Class Group`,
+         `Student's Gender`, `Average Course Evaluation Rating`,
+         Likes, Wishes) %>%
+  filter(!is.na(`Average Course Evaluation Rating`)) %>%
+  arrange(`Class Group`)
+View(evaluation_likes_and_wishes)
+
+evaluation_likes_and_wishes$Likes <- sapply(evaluation_likes_and_wishes$Likes, expand_contractions)
+evaluation_likes_and_wishes$Wishes <- sapply(evaluation_likes_and_wishes$Wishes, expand_contractions)
+
+View(evaluation_likes_and_wishes)
+
+remove_special_characters <- function(doc) {
+  gsub("[^a-zA-Z0-9 ]", "", doc, ignore.case = TRUE)
+}
+
+
+View(evaluation_likes_and_wishes)
+
+evaluation_likes_and_wishes$Likes <- sapply(evaluation_likes_and_wishes$Likes, remove_special_characters) 
+evaluation_likes_and_wishes$Wishes <- sapply(evaluation_likes_and_wishes$Wishes, remove_special_characters) 
+
+evaluation_likes_and_wishes$Likes <- sapply(evaluation_likes_and_wishes$Likes, tolower)
+evaluation_likes_and_wishes$Wishes <- sapply(evaluation_likes_and_wishes$Wishes, tolower)
+
+
+View(evaluation_likes_and_wishes)
+
+write.csv(evaluation_likes_and_wishes,
+          file = "data/evaluation_likes_and_wishes.csv",
+          row.names = FALSE)
+
+head(sample(stop_words$word, 20), 20)
+
+
+undesirable_words <- c("wow", "lol", "none", "na")
+
+evaluation_likes_filtered <- evaluation_likes_and_wishes %>%
+  unnest_tokens(word, Likes) %>%
+  anti_join(stop_words, by = c("word")) %>%
+  distinct() %>%
+  filter(!word %in% undesirable_words) %>%
+  filter(nchar(word) > 3) %>%
+  rename(`Likes (tokenized)` = word) %>%
+  select(-Wishes)
+
+write.csv(evaluation_likes_filtered,
+          file = "data/evaluation_likes_filtered.csv",
+          row.names = FALSE)
+evaluation_wishes_filtered <- evaluation_likes_and_wishes %>%
+  unnest_tokens(word, Wishes) %>%
+  anti_join(stop_words, by = c("word")) %>%
+  distinct() %>%
+  filter(!word %in% undesirable_words) %>%
+  filter(nchar(word) > 3) %>%
+  rename(`Wishes (tokenized)` = word) %>%
+  select(-Likes)
+
+write.csv(evaluation_wishes_filtered,
+          file = "data/evaluation_wishes_filtered.csv",
+          row.names = FALSE)
+correct_spelling <- function(x) {
+  sapply(1:length(x),
+    function(y) {
+      bad <- hunspell(x[y])[[1]]
+      good <-
+        unlist(lapply(hunspell_suggest(bad),
+                      `[[`, 1))
+
+      if (length(bad)) {
+        for (i in 1:length(bad)){
+          x[y] <<- gsub(bad[i], good[i], x[y])
+        }
+      }
+    }
+  )
+  x
+}
+
+View(evaluation_likes_filtered)
+
+corrected_spelling <-
+  evaluation_likes_filtered$`Likes (tokenized)` %>%
+  correct_spelling()
+
+evaluation_likes_filtered$`Likes (tokenized)` <- corrected_spelling
+
+View(evaluation_likes_filtered)
+
+evaluation_likes_filtered$`Likes (tokenized)` <- sapply(evaluation_likes_filtered$`Likes (tokenized)`, expand_contractions)
+evaluation_likes_filtered$`Likes (tokenized)` <- sapply(evaluation_likes_filtered$`Likes (tokenized)`, remove_special_characters)
+evaluation_likes_filtered$`Likes (tokenized)` <- sapply(evaluation_likes_filtered$`Likes (tokenized)`, tolower)
+
+evaluation_likes_filtered <- evaluation_likes_filtered %>%
+  unnest_tokens(word, `Likes (tokenized)`, token = "ngrams", n = 1) %>%
+  anti_join(stop_words, by = c("word")) %>%
+  distinct() %>%
+  filter(!word %in% undesirable_words) %>%
+  filter(nchar(word) > 3) %>%
+  rename(`Likes (tokenized)` = word)
+
+write.csv(evaluation_likes_filtered,
+          file = "data/evaluation_likes_filtered.csv",
+          row.names = FALSE)
+
+View(evaluation_likes_filtered)
+
+View(evaluation_wishes_filtered)
+
+corrected_spelling <-
+  evaluation_wishes_filtered$`Wishes (tokenized)` %>%
+  correct_spelling()
+
+evaluation_wishes_filtered$`Wishes (tokenized)` <- corrected_spelling
+
+View(evaluation_wishes_filtered)
+
+evaluation_wishes_filtered$`Wishes (tokenized)` <- sapply(evaluation_wishes_filtered$`Wishes (tokenized)`, expand_contractions)
+evaluation_wishes_filtered$`Wishes (tokenized)` <- sapply(evaluation_wishes_filtered$`Wishes (tokenized)`, remove_special_characters)
+evaluation_wishes_filtered$`Wishes (tokenized)` <- sapply(evaluation_wishes_filtered$`Wishes (tokenized)`, tolower)
+evaluation_wishes_filtered <- evaluation_wishes_filtered %>%
+  unnest_tokens(word, `Wishes (tokenized)`, token = "ngrams", n = 1) %>%
+  anti_join(stop_words, by = c("word")) %>%
+  distinct() %>%
+  filter(!word %in% undesirable_words) %>%
+  filter(nchar(word) > 3) %>%
+  rename(`Wishes (tokenized)` = word)
+
+write.csv(evaluation_wishes_filtered,
+          file = "data/evaluation_wishes_filtered.csv",
+          row.names = FALSE)
+
+View(evaluation_wishes_filtered)
+lemma_dictionary_for_likes <-
+  make_lemma_dictionary(evaluation_likes_filtered$`Likes (tokenized)`,
+                        engine = "hunspell")
+
+evaluation_likes_filtered$`Likes (tokenized)` <-
+  evaluation_likes_filtered$`Likes (tokenized)` %>%
+  lemmatize_strings(dictionary = lemma_dictionary_for_likes)
+
+View(evaluation_likes_filtered)
+lemma_dictionary_for_wishes <-
+  make_lemma_dictionary(evaluation_wishes_filtered$`Wishes (tokenized)`,
+                        engine = "hunspell")
+
+evaluation_wishes_filtered$`Wishes (tokenized)` <-
+  evaluation_wishes_filtered$`Wishes (tokenized)` %>%
+  lemmatize_strings(dictionary = lemma_dictionary_for_wishes)
+
+View(evaluation_wishes_filtered)
 ```
 
-## \<You Can Have Another Sub-Title Here if you wish\>
 
-Describe the code chunk here.
+## Word Count and Top Words
 
+Here, we calculate the words each gender used in the dataset. We then group it according to the class groups available and further according to the likes and wishes. Next, we evaluate the mostly used words by each gender in each class group and group it further according to the likes and wishes.
 ```{r Your Eighth Code Chunk}
-# Fill this with other R related code that will be executed when the R markdown
+## Evaluation Likes ----
+### Word count per gender ----
+word_count_per_gender_likes <- evaluation_likes_filtered %>%
+  group_by(`Student's Gender`) %>%
+  summarise(num_words = n()) %>%
+  arrange(desc(num_words))
+
+word_count_per_gender_likes %>%
+  mutate(num_words = color_bar("lightblue")(num_words)) %>%
+  rename(`Number of Words` = num_words) %>%
+  kable("html", escape = FALSE, align = "c",
+        caption = "Number of Significant Words in Evaluation Likes 
+                   per Gender: Minus contractions, special characters, 
+                   stopwords, short words, and censored words.") %>%
+  kable_styling(bootstrap_options =
+                  c("striped", "condensed", "bordered"),
+                full_width = FALSE)
+
+### Word count per group ----
+word_count_per_group <- evaluation_likes_filtered %>%
+  group_by(`Class Group`) %>%
+  summarise(num_words = n()) %>%
+  arrange(desc(num_words))
+
+word_count_per_group %>%
+  mutate(num_words = color_bar("lightblue")(num_words)) %>%
+  rename(`Number of Words` = num_words) %>%
+  kable("html", escape = FALSE, align = "c",
+        caption = "Number of Significant Words in Evaluation Likes 
+                   per Group: Minus contractions, special characters, 
+                   stopwords, short words, and censored words.") %>%
+  kable_styling(bootstrap_options =
+                  c("striped", "condensed", "bordered"),
+                full_width = FALSE)
+
+## Evaluation Wishes ----
+### Word count per gender ----
+word_count_per_gender_wishes <- evaluation_wishes_filtered %>%
+  group_by(`Student's Gender`) %>%
+  summarise(num_words = n()) %>%
+  arrange(desc(num_words))
+
+word_count_per_gender_wishes %>%
+  mutate(num_words = color_bar("lightblue")(num_words)) %>%
+  rename(`Number of Words` = num_words) %>%
+  kable("html", escape = FALSE, align = "c",
+        caption = "Number of Significant Words in Evaluation Wishes 
+                   per Gender: Minus contractions, special characters, 
+                   stopwords, short words, and censored words.") %>%
+  kable_styling(bootstrap_options =
+                  c("striped", "condensed", "bordered"),
+                full_width = FALSE)
+
+### Word count per group ----
+word_count_per_group_wishes <- evaluation_wishes_filtered %>%
+  group_by(`Class Group`) %>%
+  summarise(num_words = n()) %>%
+  arrange(desc(num_words))
+
+word_count_per_group_wishes %>%
+  mutate(num_words = color_bar("lightblue")(num_words)) %>%
+  rename(`Number of Words` = num_words) %>%
+  kable("html", escape = FALSE, align = "c",
+        caption = "Number of Significant Words in Evaluation Wishes 
+                   per Group: Minus contractions, special characters, 
+                   stopwords, short words, and censored words.") %>%
+  kable_styling(bootstrap_options =
+                  c("striped", "condensed", "bordered"),
+                full_width = FALSE)
+
+# STEP 7. Top Words ----
+## Evaluation Likes ----
+### Top 10 words for female students ----
+evaluation_likes_filtered %>%
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Likes (tokenized)`) %>%
+  filter(`Student's Gender` == "Female") %>%
+  count(`Likes (tokenized)`, sort = TRUE) %>%
+  top_n(9) %>%
+  mutate(`Likes (tokenized)` = reorder(`Likes (tokenized)`, n)) %>%
+  ggplot() +
+  geom_col(aes(`Likes (tokenized)`, n), fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  xlab("Word in Course Evaluation") +
+  ylab("Number of Times Used (Term Frequency)") +
+  ggtitle("Most Frequently Used Words in Course Evaluation Likes for Female
+          Students") +
+  coord_flip()
+
+### Top 10 words for male students ----
+evaluation_likes_filtered %>%
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Likes (tokenized)`) %>%
+  filter(`Student's Gender` == "Male") %>%
+  count(`Likes (tokenized)`, sort = TRUE) %>%
+  top_n(9) %>%
+  mutate(`Likes (tokenized)` = reorder(`Likes (tokenized)`, n)) %>%
+  ggplot() +
+  geom_col(aes(`Likes (tokenized)`, n), fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  xlab("Word in Course Evaluation") +
+  ylab("Number of Times Used (Term Frequency)") +
+  ggtitle("Most Frequently Used Words in Course Evaluation Likes for Male
+          Students") +
+  coord_flip()
+
+### Top 10 words per gender ----
+popular_words <- evaluation_likes_filtered %>%
+  group_by(`Student's Gender`) %>%
+  count(`Likes (tokenized)`, `Student's Gender`, sort = TRUE) %>%
+  slice(seq_len(10)) %>%
+  ungroup() %>%
+  arrange(`Student's Gender`, n) %>%
+  mutate(row = row_number())
+
+popular_words %>%
+  ggplot(aes(row, n, fill = `Student's Gender`)) +
+  geom_col(fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  labs(x = "Word in Course Evaluation",
+       y = "Number of Times Used (Term Frequency)") +
+  ggtitle("Most Frequently Used Words in Course Evaluation Likes per Gender") +
+  facet_wrap(~`Student's Gender`, scales = "free") +
+  scale_x_continuous(
+                     breaks = popular_words$row,
+                     labels = popular_words$`Likes (tokenized)`) +
+  coord_flip()
+
+### Top words for Group A students ----
+evaluation_likes_filtered %>%
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Likes (tokenized)`) %>%
+  filter(`Class Group` == "A") %>%
+  count(`Likes (tokenized)`, sort = TRUE) %>%
+  top_n(9) %>%
+  mutate(`Likes (tokenized)` = reorder(`Likes (tokenized)`, n)) %>%
+  ggplot() +
+  geom_col(aes(`Likes (tokenized)`, n), fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  xlab("Word in Course Evaluation") +
+  ylab("Number of Times Used (Term Frequency)") +
+  ggtitle("Most Frequently Used Words in Course Evaluation Likes for Group A
+          Students") +
+  coord_flip()
+
+### Top words for Group B students ----
+evaluation_likes_filtered %>%
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Likes (tokenized)`) %>%
+  filter(`Class Group` == "B") %>%
+  count(`Likes (tokenized)`, sort = TRUE) %>%
+  top_n(9) %>%
+  mutate(`Likes (tokenized)` = reorder(`Likes (tokenized)`, n)) %>%
+  ggplot() +
+  geom_col(aes(`Likes (tokenized)`, n), fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  xlab("Word in Course Evaluation") +
+  ylab("Number of Times Used (Term Frequency)") +
+  ggtitle("Most Frequently Used Words in Course Evaluation Likes for Group B
+          Students") +
+  coord_flip()
+
+### Top words for Group C students ----
+evaluation_likes_filtered %>%
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Likes (tokenized)`) %>%
+  filter(`Class Group` == "C") %>%
+  count(`Likes (tokenized)`, sort = TRUE) %>%
+  top_n(9) %>%
+  mutate(`Likes (tokenized)` = reorder(`Likes (tokenized)`, n)) %>%
+  ggplot() +
+  geom_col(aes(`Likes (tokenized)`, n), fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  xlab("Word in Course Evaluation") +
+  ylab("Number of Times Used (Term Frequency)") +
+  ggtitle("Most Frequently Used Words in Course Evaluation Likes for Group C
+          Students") +
+  coord_flip()
+
+### Top 10 words per group ----
+popular_words <- evaluation_likes_filtered %>%
+  group_by(`Class Group`) %>%
+  count(`Likes (tokenized)`, `Class Group`, sort = TRUE) %>%
+  slice(seq_len(10)) %>%
+  ungroup() %>%
+  arrange(`Class Group`, n) %>%
+  mutate(row = row_number())
+
+popular_words %>%
+  ggplot(aes(row, n, fill = `Class Group`)) +
+  geom_col(fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  labs(x = "Word in Course Evaluation", y = "Number of Times Used") +
+  ggtitle("Most Frequently Used Words in Course Evaluation Likes per 
+          Class Group") +
+  facet_wrap(~`Class Group`, scales = "free") +
+  scale_x_continuous(
+                     breaks = popular_words$row,
+                     labels = popular_words$`Likes (tokenized)`) +
+  coord_flip()
+
+## Evaluation Wishes ----
+### Top 10 words for female students ----
+evaluation_wishes_filtered %>%
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Wishes (tokenized)`) %>%
+  filter(`Student's Gender` == "Female") %>%
+  count(`Wishes (tokenized)`, sort = TRUE) %>%
+  top_n(9) %>%
+  mutate(`Wishes (tokenized)` = reorder(`Wishes (tokenized)`, n)) %>%
+  ggplot() +
+  geom_col(aes(`Wishes (tokenized)`, n), fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  xlab("Word in Course Evaluation") +
+  ylab("Number of Times Used (Term Frequency)") +
+  ggtitle("Most Frequently Used Words in Course Evaluation Wishes for Female
+          Students") +
+  coord_flip()
+
+### Top 10 words for male students ----
+evaluation_wishes_filtered %>%
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Wishes (tokenized)`) %>%
+  filter(`Student's Gender` == "Male") %>%
+  count(`Wishes (tokenized)`, sort = TRUE) %>%
+  top_n(9) %>%
+  mutate(`Wishes (tokenized)` = reorder(`Wishes (tokenized)`, n)) %>%
+  ggplot() +
+  geom_col(aes(`Wishes (tokenized)`, n), fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  xlab("Word in Course Evaluation") +
+  ylab("Number of Times Used (Term Frequency)") +
+  ggtitle("Most Frequently Used Words in Course Evaluation Wishes for Male
+          Students") +
+  coord_flip()
+
+### Top 10 words per gender ----
+popular_words <- evaluation_wishes_filtered %>%
+  group_by(`Student's Gender`) %>%
+  count(`Wishes (tokenized)`, `Student's Gender`, sort = TRUE) %>%
+  slice(seq_len(10)) %>%
+  ungroup() %>%
+  arrange(`Student's Gender`, n) %>%
+  mutate(row = row_number())
+
+popular_words %>%
+  ggplot(aes(row, n, fill = `Student's Gender`)) +
+  geom_col(fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  labs(x = "Word in Course Evaluation", y = "Number of Times Used") +
+  ggtitle("Most Frequently Used Words in Course Evaluation Wishes per Gender") +
+  facet_wrap(~`Student's Gender`, scales = "free") +
+  scale_x_continuous(
+                     breaks = popular_words$row,
+                     labels = popular_words$`Wishes (tokenized)`) +
+  coord_flip()
+
+### Top words for Group A students ----
+evaluation_wishes_filtered %>%
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Wishes (tokenized)`) %>%
+  filter(`Class Group` == "A") %>%
+  count(`Wishes (tokenized)`, sort = TRUE) %>%
+  top_n(9) %>%
+  mutate(`Wishes (tokenized)` = reorder(`Wishes (tokenized)`, n)) %>%
+  ggplot() +
+  geom_col(aes(`Wishes (tokenized)`, n), fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  xlab("Word in Course Evaluation") +
+  ylab("Number of Times Used (Term Frequency)") +
+  ggtitle("Most Frequently Used Words in Course Evaluation Wishes for Group A
+          Students") +
+  coord_flip()
+
+### Top words for Group B students ----
+evaluation_wishes_filtered %>%
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Wishes (tokenized)`) %>%
+  filter(`Class Group` == "B") %>%
+  count(`Wishes (tokenized)`, sort = TRUE) %>%
+  top_n(9) %>%
+  mutate(`Wishes (tokenized)` = reorder(`Wishes (tokenized)`, n)) %>%
+  ggplot() +
+  geom_col(aes(`Wishes (tokenized)`, n), fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  xlab("Word in Course Evaluation") +
+  ylab("Number of Times Used (Term Frequency)") +
+  ggtitle("Most Frequently Used Words in Course Evaluation Wishes for Group B
+          Students") +
+  coord_flip()
+
+### Top words for Group C students ----
+evaluation_wishes_filtered %>%
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Wishes (tokenized)`) %>%
+  filter(`Class Group` == "C") %>%
+  count(`Wishes (tokenized)`, sort = TRUE) %>%
+  top_n(9) %>%
+  mutate(`Wishes (tokenized)` = reorder(`Wishes (tokenized)`, n)) %>%
+  ggplot() +
+  geom_col(aes(`Wishes (tokenized)`, n), fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  xlab("Word in Course Evaluation") +
+  ylab("Number of Times Used (Term Frequency)") +
+  ggtitle("Most Frequently Used Words in Course Evaluation Wishes for Group C
+          Students") +
+  coord_flip()
+
+### Top 10 words per group ----
+popular_words <- evaluation_wishes_filtered %>%
+  group_by(`Class Group`) %>%
+  count(`Wishes (tokenized)`, `Class Group`, sort = TRUE) %>%
+  slice(seq_len(10)) %>%
+  ungroup() %>%
+  arrange(`Class Group`, n) %>%
+  mutate(row = row_number())
+
+popular_words %>%
+  ggplot(aes(row, n, fill = `Class Group`)) +
+  geom_col(fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  labs(x = "Word in Course Evaluation",
+       y = "Number of Times Used (Term Frequency)") +
+  ggtitle("Most Frequently Used Words in Course Evaluation Wishes per 
+          Class Group") +
+  facet_wrap(~`Class Group`, scales = "free") +
+  scale_x_continuous(
+                     breaks = popular_words$row,
+                     labels = popular_words$`Wishes (tokenized)`) +
+  coord_flip()
 ```
+
+## Word Cloud
+
+This is representation of the most appearing words in the dataset in a visually appealing manner. It has disadvantages like: subjectivity, ambiguity, lack of context and statistical limitations.
+```{r Your Ninth Code Chunk}
+## Evaluation Likes ----
+evaluation_likes_filtered_cloud <- evaluation_likes_filtered %>%
+  count(`Likes (tokenized)`, sort = TRUE)
+
+wordcloud2(evaluation_likes_filtered_cloud, size = .5)
+
+## Evaluation Wishes ----
+evaluation_wishes_filtered_cloud <- evaluation_wishes_filtered %>%
+  count(`Wishes (tokenized)`, sort = TRUE)
+
+wordcloud2(evaluation_wishes_filtered_cloud, size = .5)
+```
+
+##  Term Frequency - Inverse Document Frequency (TF-IDF)
+
+TF-IDF is used to evaluate the importance of a word in a document relative to a collection of documents.The assumption behind TF-IDF is that terms that appear more frequently in a document (or a comment in this case) should be given a higher weight, unless it also appears in many other documents (or many other comments in this case).
+
+Term Frequency (TF) - This measures how often a word appears in a specific document. Words that
+ occur frequently within a document are likely to be important in describing the content of that document.
+### Formula for TF ----
+(Number of times a term appears in a document) / (Total number of terms in the document)
+
+Inverse Document Frequency (IDF) - This measures how unique or rare a word is across a collection of documents.Words that are rare across many documents but present in one specific document are considered more valuable in distinguishing that document from others.
+### Formula for IDF ----
+log((Total number of documents in the corpus) / (Number of documents containing the term))
+
+
+```{r Your Tenth Code Chunk}
+## Evaluation Likes ----
+### TF-IDF Score per Gender ----
+popular_tfidf_words_gender_likes <- evaluation_likes_filtered %>%
+  unnest_tokens(word, `Likes (tokenized)`) %>%
+  distinct() %>%
+  filter(!word %in% undesirable_words) %>%
+  filter(nchar(word) > 3) %>%
+  rename(`Likes (tokenized)` = word) %>%
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Likes (tokenized)`) %>%
+  count(`Student's Gender`, `Likes (tokenized)`, sort = TRUE) %>%
+  ungroup() %>%
+  bind_tf_idf(`Likes (tokenized)`, `Student's Gender`, n)
+
+head(popular_tfidf_words_gender_likes)
+
+top_popular_tfidf_words <- popular_tfidf_words_gender_likes %>%
+  arrange(desc(tf_idf)) %>%
+  mutate(`Likes (tokenized)` =
+           factor(`Likes (tokenized)`,
+                  levels = rev(unique(`Likes (tokenized)`)))) %>%
+  group_by(`Student's Gender`) %>%
+  slice(seq_len(10)) %>%
+  ungroup() %>%
+  arrange(`Student's Gender`, tf_idf) %>%
+  mutate(row = row_number())
+
+top_popular_tfidf_words %>%
+  ggplot(aes(x = row, tf_idf, fill = `Student's Gender`)) +
+  geom_col(fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  labs(x = "Word in Course Evaluation", y = "TF-IDF Score") +
+  ggtitle("Important Words using TF-IDF by Chart Level") +
+  ggtitle("Most Important Words by TF-IDF Score in Course Evaluation Likes per 
+      Class Group") +
+  facet_wrap(~`Student's Gender`, scales = "free") +
+  scale_x_continuous(
+                     breaks = top_popular_tfidf_words$row,
+                     labels = top_popular_tfidf_words$`Likes (tokenized)`) +
+  coord_flip()
+
+### TF-IDF Score per Group ----
+popular_tfidf_words_likes <- evaluation_likes_filtered %>%
+  unnest_tokens(word, `Likes (tokenized)`) %>%
+  distinct() %>%
+  filter(!word %in% undesirable_words) %>%
+  filter(nchar(word) > 3) %>%
+  rename(`Likes (tokenized)` = word) %>%
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Likes (tokenized)`) %>%
+  count(`Class Group`, `Likes (tokenized)`, sort = TRUE) %>%
+  ungroup() %>%
+  bind_tf_idf(`Likes (tokenized)`, `Class Group`, n)
+
+head(popular_tfidf_words_likes)
+
+top_popular_tfidf_words <- popular_tfidf_words_likes %>%
+  arrange(desc(tf_idf)) %>%
+  mutate(`Likes (tokenized)` =
+           factor(`Likes (tokenized)`,
+                  levels = rev(unique(`Likes (tokenized)`)))) %>%
+  group_by(`Class Group`) %>%
+  slice(seq_len(10)) %>%
+  ungroup() %>%
+  arrange(`Class Group`, tf_idf) %>%
+  mutate(row = row_number())
+
+top_popular_tfidf_words %>%
+  ggplot(aes(x = row, tf_idf, fill = `Class Group`)) +
+  geom_col(fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  labs(x = "Word in Course Evaluation", y = "TF-IDF Score") +
+  ggtitle("Important Words using TF-IDF by Chart Level") +
+  ggtitle("Most Important Words by TF-IDF Score in Course Evaluation Likes per 
+      Class Group") +
+  facet_wrap(~`Class Group`, scales = "free") +
+  scale_x_continuous(
+                     breaks = top_popular_tfidf_words$row,
+                     labels = top_popular_tfidf_words$`Likes (tokenized)`) +
+  coord_flip()
+
+## Evaluation Wishes ----
+### TF-IDF Score per Gender ----
+popular_tfidf_words_gender_wishes <- evaluation_wishes_filtered %>%
+  unnest_tokens(word, `Wishes (tokenized)`) %>%
+  distinct() %>%
+  filter(!word %in% undesirable_words) %>%
+  filter(nchar(word) > 3) %>%
+  rename(`Wishes (tokenized)` = word) %>%
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Wishes (tokenized)`) %>%
+  count(`Student's Gender`, `Wishes (tokenized)`, sort = TRUE) %>%
+  ungroup() %>%
+  bind_tf_idf(`Wishes (tokenized)`, `Student's Gender`, n)
+
+head(popular_tfidf_words_gender_wishes)
+
+top_popular_tfidf_words <- popular_tfidf_words_gender_wishes %>%
+  arrange(desc(tf_idf)) %>%
+  mutate(`Wishes (tokenized)` =
+           factor(`Wishes (tokenized)`,
+                  levels = rev(unique(`Wishes (tokenized)`)))) %>%
+  group_by(`Student's Gender`) %>%
+  slice(seq_len(10)) %>%
+  ungroup() %>%
+  arrange(`Student's Gender`, tf_idf) %>%
+  mutate(row = row_number())
+
+top_popular_tfidf_words %>%
+  ggplot(aes(x = row, tf_idf, fill = `Student's Gender`)) +
+  geom_col(fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  labs(x = "Word in Course Evaluation", y = "TF-IDF Score") +
+  ggtitle("Important Words using TF-IDF by Chart Level") +
+  ggtitle("Most Important Words by TF-IDF Score in Course Evaluation Wishes per 
+      Class Group") +
+  facet_wrap(~`Student's Gender`, scales = "free") +
+  scale_x_continuous(
+                     breaks = top_popular_tfidf_words$row,
+                     labels = top_popular_tfidf_words$`Wishes (tokenized)`) +
+  coord_flip()
+
+### TF-IDF Score per Group ----
+popular_tfidf_words_likes <- evaluation_wishes_filtered %>%
+  unnest_tokens(word, `Wishes (tokenized)`) %>%
+  distinct() %>%
+  filter(!word %in% undesirable_words) %>%
+  filter(nchar(word) > 3) %>%
+  rename(`Wishes (tokenized)` = word) %>%
+  select(`Class Group`, `Student's Gender`,
+         `Average Course Evaluation Rating`, `Wishes (tokenized)`) %>%
+  count(`Class Group`, `Wishes (tokenized)`, sort = TRUE) %>%
+  ungroup() %>%
+  bind_tf_idf(`Wishes (tokenized)`, `Class Group`, n)
+
+head(popular_tfidf_words_likes)
+
+top_popular_tfidf_words <- popular_tfidf_words_likes %>%
+  arrange(desc(tf_idf)) %>%
+  mutate(`Wishes (tokenized)` =
+           factor(`Wishes (tokenized)`,
+                  levels = rev(unique(`Wishes (tokenized)`)))) %>%
+  group_by(`Class Group`) %>%
+  slice(seq_len(10)) %>%
+  ungroup() %>%
+  arrange(`Class Group`, tf_idf) %>%
+  mutate(row = row_number())
+
+top_popular_tfidf_words %>%
+  ggplot(aes(x = row, tf_idf, fill = `Class Group`)) +
+  geom_col(fill = blue_grey_colours_1) +
+  blue_grey_theme() +
+  labs(x = "Word in Course Evaluation", y = "TF-IDF Score") +
+  ggtitle("Important Words using TF-IDF by Chart Level") +
+  ggtitle("Most Important Words by TF-IDF Score in Course Evaluation Wishes per 
+      Class Group") +
+  facet_wrap(~`Class Group`, scales = "free") +
+  scale_x_continuous(
+                     breaks = top_popular_tfidf_words$row,
+                     labels = top_popular_tfidf_words$`Wishes (tokenized)`) +
+  coord_flip()
+```
+
+## References
+Ashton, D., Porter, S., library), N. D. (chart js, library), T. L. (chart js, & library), W. E. (chart js. (2016). radarchart: Radar Chart from ‘Chart.js’ (0.3.1) [Computer software]. https://cran.r-project.org/package=radarchart
+
+Auguie, B., & Antonov, A. (2017). gridExtra: Miscellaneous Functions for ‘Grid’ Graphics (2.3) [Computer software]. https://cran.r-project.org/package=gridExtra
+
+Bevans, R. (2023b). Sample Crop Data Dataset for ANOVA (Version 1) [Dataset]. Scribbr. https://www.scribbr.com/wp-content/uploads//2020/03/crop.data_.anova_.zip 
+
+Csárdi, G., Nepusz, T., Traag, V., Horvát, S., Zanini, F., Noom, D., Müller, K., Salmon, M., & details, C. Z. I. igraph author. (2023). igraph: Network Analysis and Visualization (1.5.1) [Computer software]. https://cran.r-project.org/package=igraph 
+
+Gu, Z., Gu, L., Eils, R., Schlesner, M., & Brors, B. (2014). Circlize Implements and Enhances Circular Visualization in R. Bioinformatics (Oxford, England), 30(19), 2811–2812. https://doi.org/10.1093/bioinformatics/btu393
+
+Gu, Z. (2022). circlize: Circular Visualization (0.4.15) [Computer software]. https://cran.r-project.org/package=circlize 
+
+Lang, D., & Chien, G. (2018). wordcloud2: Create Word Cloud by ‘htmlwidget’ (0.2.1) [Computer software]. https://cran.r-project.org/package=wordcloud2 
+
+Leonawicz, M. (2023). memery: Internet Memes for Data Analysts (0.5.7) [Computer software]. https://cran.r-project.org/package=memery 
+
+Liske, D. (2018). R NLP & Machine Learning: Lyric Analysis [Tutorial]. Datacamp. https://www.datacamp.com/tutorial/R-nlp-machine-learning 
+
+Ooms, J. (2023). magick: Advanced Graphics and Image-Processing in R (2.7.5) [Computer software]. https://cran.r-project.org/package=magick 
+
+Pedersen, T. L., & RStudio. (2022). ggraph: An Implementation of Grammar of Graphics for Graphs and Networks (2.1.0) [Computer software]. https://cran.r-project.org/package=ggraph 
+
+Phillips, N. (2017). yarrr: A Companion to the e-Book ‘YaRrr!: The Pirate’s Guide to R’ (0.1.5) [Computer software]. https://cran.r-project.org/package=yarrr
+
+Queiroz, G. D., Fay, C., Hvitfeldt, E., Keyes, O., Misra, K., Mastny, T., Erickson, J., Robinson, D., Silge  [aut, J., & cre. (2023). tidytext: Text Mining using ‘dplyr’, ‘ggplot2’, and Other Tidy Tools (0.4.1) [Computer software]. https://cran.r-project.org/package=tidytext 
+
+Ren, K., & Russell, K. (2021). formattable: Create ‘Formattable’ Data Structures (0.2.1) [Computer software]. https://cran.r-project.org/package=formattable
+
+Robinson, D., Misra, K., Silge  [aut, J., & cre. (2022). widyr: Widen, Process, then Re-Tidy Data (0.1.5) [Computer software]. https://cran.r-project.org/package=widyr 
+
+Slowikowski, K., Schep, A., Hughes, S., Dang, T. K., Lukauskas, S., Irisson, J.-O., Kamvar, Z. N., Ryan, T., Christophe, D., Hiroaki, Y., Gramme, P., Abdol, A. M., Barrett, M., Cannoodt, R., Krassowski, M., Chirico, M., & Aphalo, P. (2023). ggrepel: Automatically Position Non-Overlapping Text Labels with ‘ggplot2’ (0.9.3) [Computer software]. https://cran.r-project.org/package=ggrepel 
+
+Wickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K., Wilke, C., Woo, K., Yutani, H., Dunnington, D., Posit, & PBC. (2023). ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics (3.4.3) [Computer software]. https://cran.r-project.org/package=ggplot2 
+
+Wickham, H., François, R., Henry, L., Müller, K., Vaughan, D., Software, P., & PBC. (2023). dplyr: A Grammar of Data Manipulation (1.1.3) [Computer software]. https://cran.r-project.org/package=dplyr 
+
+Wickham, H., Vaughan, D., Girlich, M., Ushey, K., Posit, & PBC. (2023). tidyr: Tidy Messy Data (1.3.0) [Computer software]. https://cran.r-project.org/package=tidyr 
+
+ Xie  [aut, Y., cre, Sarma, A., Vogt, A., Andrew, A., Zvoleff, A., Al-Zubaidi, A., http://www.andre-simon.de), A. S. (the C. files under inst/themes/ were derived from the H. package, Atkins, A., Wolen, A., Manton, A., Yasumoto, A., Baumer, B., Diggs, B., Zhang, B., Yapparov, B., Pereira, C., Dervieux, C., Hall, D., … PBC. (2023). knitr: A General-Purpose Package for Dynamic Report Generation in R (1.44) [Computer software]. https://cran.r-project.org/package=knitr 
+ 
+Zhu  [aut, H., cre, Travison, T., Tsai, T., Beasley, W., Xie, Y., Yu, G., Laurent, S., Shepherd, R., Sidi, Y., Salzer, B., Gui, G., Fan, Y., Murdoch, D., & Evans, B. (2021). kableExtra: Construct Complex Table with ‘kable’ and Pipe Syntax (1.3.4) [Computer software]. https://cran.r-project.org/package=kableExtra 
 
 **etc.** as per the lab submission requirements. Be neat and communicate in a clear and logical manner.
