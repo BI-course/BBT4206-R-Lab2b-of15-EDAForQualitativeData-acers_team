@@ -51,13 +51,165 @@ if (!is.element("formatR", installed.packages()[, 1])) {
 }
 require("formatR")
 
+## dplyr - For data manipulation ----
+if (!is.element("dplyr", installed.packages()[, 1])) {
+  install.packages("dplyr", dependencies = TRUE,
+  repos = "https://cloud.r-project.org")
+}
+require("dplyr")
+
+## ggplot2 - For data visualizations using the Grammar for Graphics package ----
+if (!is.element("ggplot2", installed.packages()[, 1])) {
+install.packages("ggplot2", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("ggplot2")
+
+## ggrepel - Additional options for the Grammar for Graphics package ----
+if (!is.element("ggrepel", installed.packages()[, 1])) {
+install.packages("ggrepel", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("ggrepel")
+
+## ggraph - Additional options for the Grammar for Graphics package ----
+if (!is.element("ggraph", installed.packages()[, 1])) {
+install.packages("ggraph", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("ggraph")
+
+## tidytext - For text mining ----
+if (!is.element("tidytext", installed.packages()[, 1])) {
+install.packages("tidytext", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("tidytext")
+
+## tidyr - To tidy messy data ----
+if (!is.element("tidyr", installed.packages()[, 1])) {
+install.packages("tidyr", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("tidyr")
+
+## widyr - To widen, process, and re-tidy a dataset ----
+if (!is.element("widyr", installed.packages()[, 1])) {
+install.packages("widyr", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("widyr")
+
+## gridExtra - to arrange multiple grid-based plots on a page ----
+if (!is.element("gridExtra", installed.packages()[, 1])) {
+install.packages("gridExtra", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("gridExtra")
+
+## knitr - for dynamic report generation ----
+if (!is.element("knitr", installed.packages()[, 1])) {
+install.packages("knitr", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("knitr")
+
+## kableExtra - for nicely formatted output tables ----
+if (!is.element("kableExtra", installed.packages()[, 1])) {
+install.packages("kableExtra", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("kableExtra")
+
+## formattable -  To create a formattable object ----
+# A formattable object is an object to which a formatting function and related
+# attributes are attached.
+if (!is.element("formattable", installed.packages()[, 1])) {
+install.packages("formattable", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("formattable")
+
+## circlize - To create a cord diagram or visualization ----
+# by Gu et al. (2014)
+if (!is.element("circlize", installed.packages()[, 1])) {
+install.packages("circlize", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("circlize")
+
+## memery - For creating data analysis related memes ----
+# The memery package generates internet memes that optionally include a
+# superimposed inset plot and other atypical features, combining the visual
+# impact of an attention-grabbing meme with graphic results of data analysis.
+if (!is.element("memery", installed.packages()[, 1])) {
+install.packages("memery", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("memery")
+
+## magick - For image processing in R ----
+if (!is.element("magick", installed.packages()[, 1])) {
+install.packages("magick", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("magick")
+
+## yarrr - To create a pirate plot ----
+if (!is.element("yarrr", installed.packages()[, 1])) {
+install.packages("yarrr", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("yarrr")
+
+## radarchart - To create interactive radar charts using ChartJS ----
+if (!is.element("radarchart", installed.packages()[, 1])) {
+install.packages("radarchart", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("radarchart")
+
+## igraph - To create ngram network diagrams ----
+if (!is.element("igraph", installed.packages()[, 1])) {
+install.packages("igraph", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("igraph")
+
+## wordcloud2 - For creating wordcloud by using 'wordcloud2.JS ----
+if (!is.element("wordcloud2", installed.packages()[, 1])) {
+install.packages("wordcloud2", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
+}
+require("wordcloud2")
 
 ## readr - Load datasets from CSV files ----
 if (!is.element("readr", installed.packages()[, 1])) {
-  install.packages("readr", dependencies = TRUE,
-                   repos="https://cloud.r-project.org")
+install.packages("readr", dependencies = TRUE,
+repos = "https://cloud.r-project.org")
 }
 require("readr")
+
+## textstem - Used to lemmatize words ----
+if (!is.element("textstem", installed.packages()[, 1])) {
+  install.packages("textstem", dependencies = TRUE,
+                   repos = "https://cloud.r-project.org")
+}
+require("textstem")
+
+## hunspell - High-Performance Stemmer, Tokenizer, and Spell Checker ----
+if (!is.element("hunspell", installed.packages()[, 1])) {
+  install.packages("hunspell", dependencies = TRUE,
+                   repos = "https://cloud.r-project.org")
+}
+require("hunspell")
+
+## stringr - For processing characters in a string ----
+if (!is.element("stringr", installed.packages()[, 1])) {
+  install.packages("stringr", dependencies = TRUE,
+                   repos = "https://cloud.r-project.org")
+}
+require("stringr")
 ```
 
 ------------------------------------------------------------------------
@@ -92,6 +244,60 @@ knitr::opts_chunk$set(
 > \
 > editor_options:\
 > chunk_output_type: console
+
+# Customize Visualizations, Tables and Colour Schemes
+```{r customize}
+# The following defines a blue-grey colour scheme for the visualizations:
+## shades of blue and shades of grey
+blue_grey_colours_11 <- c("#27408E", "#304FAF", "#536CB5", "#6981c7", "#8da0db",
+                          "#dde5ec", "#c8c9ca", "#B9BCC2", "#A7AAAF", "#888A8E",
+                          "#636569")
+
+blue_grey_colours_6 <- c("#27408E", "#304FAF", "#536CB5",
+                         "#B9BCC2", "#A7AAAF", "#888A8E")
+
+blue_grey_colours_4 <- c("#27408E", "#536CB5",
+                         "#B9BCC2", "#888A8E")
+
+blue_grey_colours_3 <- c("#6981c7", "#304FAF", "#888A8E")
+
+blue_grey_colours_2 <- c("#27408E",
+                         "#888A8E")
+
+blue_grey_colours_1 <- c("#6981c7")
+
+# Custom theme for visualizations
+blue_grey_theme <- function() {
+  theme(
+    axis.ticks = element_line(
+                              linewidth = 1, linetype = "dashed",
+                              lineend = NULL, color = "#dfdede",
+                              arrow = NULL, inherit.blank = FALSE),
+    axis.text = element_text(
+                             face = "bold", color = "#3f3f41",
+                             size = 12, hjust = 0.5),
+    axis.title = element_text(face = "bold", color = "#3f3f41",
+                              size = 14, hjust = 0.5),
+    plot.title = element_text(face = "bold", color = "#3f3f41",
+                              size = 16, hjust = 0.5),
+    panel.grid = element_line(
+                              linewidth = 0.1, linetype = "dashed",
+                              lineend = NULL, color = "#dfdede",
+                              arrow = NULL, inherit.blank = FALSE),
+    panel.background = element_rect(fill = "#f3eeee"),
+    legend.title = element_text(face = "plain", color = "#3f3f41",
+                                size = 12, hjust = 0),
+    legend.position = "right"
+  )
+}
+
+# Customize the text tables for consistency using HTML formatting
+kable_theme <- function(dat, caption) {
+  kable(dat, "html", escape = FALSE, caption = caption) %>%
+    kable_styling(bootstrap_options = c("striped", "condensed", "bordered"),
+                  full_width = FALSE)
+}
+```
 
 # Loading the Student Performance Dataset
 
@@ -319,62 +525,93 @@ expand_contractions <- function(doc) {
   return(doc)
 }
 
+# Evaluation likes and wishes
 evaluation_likes_and_wishes <- student_performance_dataset %>%
   mutate(`Student's Gender` =
            ifelse(gender == 1, "Male", "Female")) %>%
   rename(`Class Group` = class_group) %>%
-  rename(Likes = `D - 1. \nWrite two things you like about the teaching and learning in this unit so far.`) %>% 
-  rename(Wishes = `D - 2. Write at least one recommendation to improve the teaching and learning in this unit (for the remaining weeks in the semester)`) %>% 
+  rename(Likes = `D - 1. \nWrite two things you like about the teaching and learning in this unit so far.`) %>% # nolint
+  rename(Wishes = `D - 2. Write at least one recommendation to improve the teaching and learning in this unit (for the remaining weeks in the semester)`) %>% # nolint
   select(`Class Group`,
          `Student's Gender`, `Average Course Evaluation Rating`,
          Likes, Wishes) %>%
   filter(!is.na(`Average Course Evaluation Rating`)) %>%
   arrange(`Class Group`)
+
+# Before expanding contractions (See row number 4)
 View(evaluation_likes_and_wishes)
 
-evaluation_likes_and_wishes$Likes <- sapply(evaluation_likes_and_wishes$Likes, expand_contractions)
-evaluation_likes_and_wishes$Wishes <- sapply(evaluation_likes_and_wishes$Wishes, expand_contractions)
+evaluation_likes_and_wishes$Likes <- sapply(evaluation_likes_and_wishes$Likes, expand_contractions) # nolint
+evaluation_likes_and_wishes$Wishes <- sapply(evaluation_likes_and_wishes$Wishes, expand_contractions) # nolint
 
+# After expanding contractions
 View(evaluation_likes_and_wishes)
+
+## Special Characters and Lower Case ----
+# NOTE: The special characters should be removed *after* expanding the
+# contractions
+
+# A function to remove special characters
+# Remember the use of regular expressions in the
+# BBT3104: Advanced Database Systems course
+
+# A tutorial on regular expressions: https://regexone.com/
+# To test your regular expression: https://regexr.com/
 
 remove_special_characters <- function(doc) {
   gsub("[^a-zA-Z0-9 ]", "", doc, ignore.case = TRUE)
 }
 
-
+# Before removing special characters (See row number 11)
 View(evaluation_likes_and_wishes)
 
-evaluation_likes_and_wishes$Likes <- sapply(evaluation_likes_and_wishes$Likes, remove_special_characters) 
-evaluation_likes_and_wishes$Wishes <- sapply(evaluation_likes_and_wishes$Wishes, remove_special_characters) 
+evaluation_likes_and_wishes$Likes <- sapply(evaluation_likes_and_wishes$Likes, remove_special_characters) # nolint
+evaluation_likes_and_wishes$Wishes <- sapply(evaluation_likes_and_wishes$Wishes, remove_special_characters) # nolint
 
-evaluation_likes_and_wishes$Likes <- sapply(evaluation_likes_and_wishes$Likes, tolower)
-evaluation_likes_and_wishes$Wishes <- sapply(evaluation_likes_and_wishes$Wishes, tolower)
+# Convert everything to lower case (to standardize the text)
+evaluation_likes_and_wishes$Likes <- sapply(evaluation_likes_and_wishes$Likes, tolower) # nolint
+evaluation_likes_and_wishes$Wishes <- sapply(evaluation_likes_and_wishes$Wishes, tolower) # nolint
 
-
+# After removing special characters and converting everything to lower case
 View(evaluation_likes_and_wishes)
 
+# [OPTIONAL] You can save the file as a CSV at this point
 write.csv(evaluation_likes_and_wishes,
           file = "data/evaluation_likes_and_wishes.csv",
           row.names = FALSE)
 
+# Additional examples can be seen here:
 head(sample(stop_words$word, 20), 20)
 
-
+# You can also create a list of words that you would like to censor
 undesirable_words <- c("wow", "lol", "none", "na")
 
-evaluation_likes_filtered <- evaluation_likes_and_wishes %>%
+evaluation_likes_filtered <- evaluation_likes_and_wishes %>% # nolint
+  # We start by tokenization (un-nesting words). This is from the variable
+  # "Like" into the variable "word".
   unnest_tokens(word, Likes) %>%
+  # Then we remove stopwords using an anti-join (remember this from the
+  # BBT3104: Advanced Database Systems course)
+  # Anti-join: do not join where the word is in the list of stopwords
   anti_join(stop_words, by = c("word")) %>%
   distinct() %>%
+  # Censor or filter out unwanted words
   filter(!word %in% undesirable_words) %>%
+  # Include only words that are more than 3 characters long (assuming that
+  # these are the words that are meaningful)
   filter(nchar(word) > 3) %>%
+  # We then rename the variable "word" for ease of use.
   rename(`Likes (tokenized)` = word) %>%
+  # We focus only on the likes in this data frame
   select(-Wishes)
 
+# Lastly, we save the created data frame as a CSV file:
 write.csv(evaluation_likes_filtered,
           file = "data/evaluation_likes_filtered.csv",
           row.names = FALSE)
-evaluation_wishes_filtered <- evaluation_likes_and_wishes %>%
+
+# The same is done to create a data frame for the "wishes" only
+evaluation_wishes_filtered <- evaluation_likes_and_wishes %>% # nolint
   unnest_tokens(word, Wishes) %>%
   anti_join(stop_words, by = c("word")) %>%
   distinct() %>%
@@ -386,6 +623,10 @@ evaluation_wishes_filtered <- evaluation_likes_and_wishes %>%
 write.csv(evaluation_wishes_filtered,
           file = "data/evaluation_wishes_filtered.csv",
           row.names = FALSE)
+
+### Correct Spelling Mistakes ----
+# We can correct spelling mistakes before lemmatization as follows:
+# Define a custom function to correct spelling
 correct_spelling <- function(x) {
   sapply(1:length(x),
     function(y) {
@@ -404,21 +645,31 @@ correct_spelling <- function(x) {
   x
 }
 
-View(evaluation_likes_filtered)
-
+#### Likes ----
+# Before spelling correction
 corrected_spelling <-
   evaluation_likes_filtered$`Likes (tokenized)` %>%
   correct_spelling()
 
 evaluation_likes_filtered$`Likes (tokenized)` <- corrected_spelling
 
+# After spelling correction
 View(evaluation_likes_filtered)
 
-evaluation_likes_filtered$`Likes (tokenized)` <- sapply(evaluation_likes_filtered$`Likes (tokenized)`, expand_contractions)
-evaluation_likes_filtered$`Likes (tokenized)` <- sapply(evaluation_likes_filtered$`Likes (tokenized)`, remove_special_characters)
-evaluation_likes_filtered$`Likes (tokenized)` <- sapply(evaluation_likes_filtered$`Likes (tokenized)`, tolower)
+### Repeat the pre-processing for the correctly spelt words ----
+# This is done for the sake of the words which were split into more than one
+# word after correcting the spelling mistake.
 
-evaluation_likes_filtered <- evaluation_likes_filtered %>%
+# The repeated pre-processing includes:
+# 1. Expanding Contractions
+evaluation_likes_filtered$`Likes (tokenized)` <- sapply(evaluation_likes_filtered$`Likes (tokenized)`, expand_contractions) # nolint
+# 2. Remove special Characters
+evaluation_likes_filtered$`Likes (tokenized)` <- sapply(evaluation_likes_filtered$`Likes (tokenized)`, remove_special_characters) # nolint
+# 3. Convert to Lower-Case for a standard form
+evaluation_likes_filtered$`Likes (tokenized)` <- sapply(evaluation_likes_filtered$`Likes (tokenized)`, tolower) # nolint
+
+# 4. Tokenization, stopword removal, short word removal, and censorship
+evaluation_likes_filtered <- evaluation_likes_filtered %>% # nolint
   unnest_tokens(word, `Likes (tokenized)`, token = "ngrams", n = 1) %>%
   anti_join(stop_words, by = c("word")) %>%
   distinct() %>%
@@ -432,6 +683,8 @@ write.csv(evaluation_likes_filtered,
 
 View(evaluation_likes_filtered)
 
+#### Wishes ----
+# Before spelling correction
 View(evaluation_wishes_filtered)
 
 corrected_spelling <-
@@ -440,12 +693,23 @@ corrected_spelling <-
 
 evaluation_wishes_filtered$`Wishes (tokenized)` <- corrected_spelling
 
+# After spelling correction
 View(evaluation_wishes_filtered)
 
-evaluation_wishes_filtered$`Wishes (tokenized)` <- sapply(evaluation_wishes_filtered$`Wishes (tokenized)`, expand_contractions)
-evaluation_wishes_filtered$`Wishes (tokenized)` <- sapply(evaluation_wishes_filtered$`Wishes (tokenized)`, remove_special_characters)
-evaluation_wishes_filtered$`Wishes (tokenized)` <- sapply(evaluation_wishes_filtered$`Wishes (tokenized)`, tolower)
-evaluation_wishes_filtered <- evaluation_wishes_filtered %>%
+### Repeat the pre-processing for the correctly spelt words ----
+# This is done for the sake of the words which were split into more than one
+# word after correcting the spelling mistake.
+
+# The repeated pre-processing includes:
+# 1. Expanding Contractions
+evaluation_wishes_filtered$`Wishes (tokenized)` <- sapply(evaluation_wishes_filtered$`Wishes (tokenized)`, expand_contractions) # nolint
+# 2. Remove special Characters
+evaluation_wishes_filtered$`Wishes (tokenized)` <- sapply(evaluation_wishes_filtered$`Wishes (tokenized)`, remove_special_characters) # nolint
+# 3. Convert to Lower-Case for a standard form
+evaluation_wishes_filtered$`Wishes (tokenized)` <- sapply(evaluation_wishes_filtered$`Wishes (tokenized)`, tolower) # nolint
+
+# 4. Tokenization, stopword removal, short word removal, and censorship
+evaluation_wishes_filtered <- evaluation_wishes_filtered %>% # nolint
   unnest_tokens(word, `Wishes (tokenized)`, token = "ngrams", n = 1) %>%
   anti_join(stop_words, by = c("word")) %>%
   distinct() %>%
@@ -458,6 +722,9 @@ write.csv(evaluation_wishes_filtered,
           row.names = FALSE)
 
 View(evaluation_wishes_filtered)
+
+### We can now perform lemmatization on the correctly spelt words ----
+
 lemma_dictionary_for_likes <-
   make_lemma_dictionary(evaluation_likes_filtered$`Likes (tokenized)`,
                         engine = "hunspell")
@@ -476,8 +743,8 @@ evaluation_wishes_filtered$`Wishes (tokenized)` <-
   lemmatize_strings(dictionary = lemma_dictionary_for_wishes)
 
 View(evaluation_wishes_filtered)
-```
 
+```
 
 ## Word Count and Top Words
 
