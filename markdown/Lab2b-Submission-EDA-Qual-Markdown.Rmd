@@ -306,7 +306,7 @@ The 20230412-20230719-BI1-BBIT4-1-StudentPerformanceDataset is then loaded. The 
 ```{r Load Dataset}
 student_performance_dataset <-
   readr::read_csv(
-                  "data/20230412-20230719-BI1-BBIT4-1-StudentPerformanceDataset.CSV",
+                  "../data/20230412-20230719-BI1-BBIT4-1-StudentPerformanceDataset.CSV",
                   col_types =
                   readr::cols(
                               class_group =
@@ -453,7 +453,6 @@ Next, we display the quartiles for each numeric variable[*... think of this proc
 ```{r Your Fifth Code Chunk}
 summary(student_performance_dataset)
 ```
-
 ## Data Manipulation
 The dplyr package allows to create a subset of the data and provides a set of verbs to help solve data manipulation challenges. These verbs include: mutate, filter, group_by, select,summarize and arrange.More documentation on dplyr can be found here: <https://cran.r-project.org/package=dplyr> or <https://github.com/tidyverse/dplyr>
 
@@ -1320,3 +1319,4 @@ Wickham, H., Vaughan, D., Girlich, M., Ushey, K., Posit, & PBC. (2023). tidyr: T
 Zhu  [aut, H., cre, Travison, T., Tsai, T., Beasley, W., Xie, Y., Yu, G., Laurent, S., Shepherd, R., Sidi, Y., Salzer, B., Gui, G., Fan, Y., Murdoch, D., & Evans, B. (2021). kableExtra: Construct Complex Table with ‘kable’ and Pipe Syntax (1.3.4) [Computer software]. https://cran.r-project.org/package=kableExtra 
 
 **etc.** as per the lab submission requirements. Be neat and communicate in a clear and logical manner.
+
